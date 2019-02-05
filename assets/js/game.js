@@ -7,6 +7,41 @@ let numberWrong = 0;
 // Questions: array of objects
 let questions = [
     {
+        question: "Which is NOT a name of one of the two eels who are Ursula’s sidekicks?",
+        options: ["Flotsam", "Jetsum", "Epsum"],
+        correctAnswer: 'Epsum',
+        image: 'assets/images/ursula-eels.jpg',
+        beenUsed: false
+    },
+    {
+        question: "Which Disney princess has a raccoon as a sidekick?",
+        options: ["Jasmine", "Pocahontas", "Merida",
+            "Mulan"],
+        correctAnswer: 'Pocahontas',
+        image: 'assets/images/raccoon.jpg',
+        beenUsed: false
+    }, {
+        question: "What is Boo's real name?",
+        options: ["Ally", "Mary", "Sara",
+            "Kelly"],
+        correctAnswer: 'Mary',
+        image: 'assets/images/boo.jpg',
+        beenUsed: false
+    }, {
+        question: "What does Cinderella's fairy godmother turn into a carriage?",
+        options: ["A turnip", "A pumpkin", "A mouse",
+            "The prince"],
+        correctAnswer: 'A pumpkin',
+        image: 'assets/images/cinderella-carriage.jpg',
+        beenUsed: false
+    }, {
+        question: "Who is Princess Aurora's prince? ",
+        options: ["Prince Charming", "Prince William", "Prince Philip",
+            "Prince"],
+        correctAnswer: 'Prince Philip',
+        image: 'assets/images/prince-philip.jpg',
+        beenUsed: false
+    }, {
         question: "In Aladdin, what is the name of Jasmine’s pet tiger? ",
         options: ["Rajah", "Aboo", "Peeta",
             "King"],
@@ -19,7 +54,7 @@ let questions = [
         options: ["5 Dozen", "3 Dozen", "18",
             "5"],
         correctAnswer: '5 Dozen',
-        image: 'assets/images/gustov.jpg',
+        image: 'assets/images/gaston.jpg',
         beenUsed: false
     },
     {
@@ -47,7 +82,7 @@ let questions = [
     },
 ];
 
- 
+
 let progressStatus = 10;
 let startGame = function () {
     console.log('start game clicked');
@@ -55,8 +90,8 @@ let startGame = function () {
     $('#startGame').css("display", "none");
     // Set question number
     questionNumber++;
-    $('#questionTotal').html(' of 10');
     $('#questionNumber').text(questionNumber);
+    $('#questionTotal').append(' of 10');
     // set question
     setQuestion();
     // start progress bar
@@ -67,54 +102,72 @@ let startGame = function () {
 
     // start timer
 
-        // if timer = 0 run wrongAnswer
+    // if timer = 0 run wrongAnswer
 }
 
 
 let answerClicked = function () {
     console.log('answer clicked');
     // stop timer
-    // console.log($(this)[0])
+
     // if this.html = correctAnswer run correct answer, else wrong answer
-    if ($(this)[0].innerText === i.correctAnswer) { 
+    if ($(this)[0].innerText === i.correctAnswer) {
         console.log('good job')
+        numberCorrect++;
     }
     // turn answer red if incorrect
     else {
         $(this).removeClass('#btn btn-outline-secondary').addClass('#btn btn-outline-danger');
+        numberWrong++;
     }
     // no matter what, set correctanswer to green
     correctAnswerGreen()
     // display next question button
     $('#nextQ').html(
-    "<button id='nextQuestion' type=button class='btn btn-primary'>Next Question</button>"
+        "<button id='nextQuestion' type=button class='btn btn-primary'>Next Question</button>"
     )
+    $('#nextQ').css('display', 'flex');
+    // if on question 10, show end game
+    if (progressStatus === 100) {
+        $('#nextQuestion').text('End Game');
+
+    }
 }
 
-  // no matter what, set correctanswer to green
-let correctAnswerGreen = function() {
-    let optionsArray =  $("[id='option']")
+
+// no matter what, set correctanswer to green
+let correctAnswerGreen = function () {
+    let optionsArray = $("[id='option']")
     for (x in optionsArray) {
         if (optionsArray[x].innerText === i.correctAnswer) {
-            optionsArray[x].className = '#btn btn-outline-success';
+            optionsArray[x].className = '#btn btn-outline-success m-3 rounded';
         }
     }
 }
 
 
 let nextQuestion = function () {
-    // questionNumber++
-    questionNumber++;
-    $('#questionNumber').text(questionNumber);
-    // change progress bar based on question number
-    progressStatus += 10;
-    $('#progressBar').css('width', progressStatus + '%')
-    // clear options
-    $('#options').html('')
-    // run set question
-    setQuestion()
+    // hide self
+    $('#nextQ').css('display', 'none');
+    // if on 10th question, run endGame
+    if ($('#nextQuestion').text() === 'End Game') {
+        endGame();
+    }
+    else {
+        // questionNumber++
+        questionNumber++;
+        $('#questionNumber').text(questionNumber);
+        // change progress bar based on question number
+        progressStatus += 10;
+        $('#progressBar').css('width', progressStatus + '%')
+        // clear options
+        $('#options').html('')
+        // run set question
+        setQuestion()
 
-    // start timer
+        // start timer
+
+    }
 }
 
 let i = '';
@@ -129,7 +182,7 @@ let setQuestion = function () {
     while (i.beenUsed);
     // sets question to used
     i.beenUsed;
-   
+
     // fill question image
     $('#image').attr('src', i.image);
     // fill question text
@@ -140,36 +193,61 @@ let setQuestion = function () {
         let optionNum = 'option' + x;
         console.log(optionNum)
         $('#options').append(
-            //template literals
-            `
-                <button id='option' value=${x} type="button" class="btn btn-outline-secondary m-3" style="width:200px">${i.options[x]}</button>
-            `
+            //template literals          
+            `<button id='option' value=${x} type="button" class="btn btn-outline-secondary m-3" style="width:200px">${i.options[x]}</button>`
         )
     }
 }
 
-let resetGame = function() {
+let endGame = function () {
+    // clear question
+    $('#question').html('');
+    // clear options
+    $('#options').html('');
+    // clear image
+    $('#image').attr('src', '')
+    // fill score
+    let yourGrade = '';
+    switch(numberCorrect) {
+        case 10:
+        yourGrade = 'A+'
+          break;
+        case 9:
+        yourGrade = 'A-'
+          break;
+        case 8:
+        yourGrade = 'B'
+          break;
+        case 7:
+        yourGrade = 'C'
+          break;
+        case 6:
+        yourGrade = 'D'
+          break;
+        default:
+        yourGrade = 'F'
+      }
+    $('#scoreboard').html(
+        `<div><h2>Number Correct: <b>${numberCorrect}</b></h2></div><br>
+        <div><h2>Number Wrong: <b>${numberWrong}</b></h2></div><br>
+        <div><h1>Your Grade: <b>${yourGrade}</b></h1></div><br>
+        <div><button class='btn btn-primary'>Start New Game</button></div>`
+    )
+}
+
+
+let resetGame = function () {
     // set all questions beenUsed to false
     // set score to 0
 }
 
 
-// On Click Functions
-    // startGame
-        $('#startGame').on('click', startGame);
-    // answerClick
-        $(document).on('click', '#option', answerClicked);
-    // nextQuestion
-        $(document).on('click', '#nextQuestion', nextQuestion);
+// Event Listeners
+
+// startGame
+$('#startGame').on('click', startGame);
+// answerClick
+$(document).on('click', '#option', answerClicked);
+// nextQuestion
+$(document).on('click', '#nextQuestion', nextQuestion);
     // New Game
-
-
-    let answeredCorrect = function () {
-        // numberCorrect++
-        numberCorrect++;
-    }
-    
-    let andsweredWrong = function () {
-        // numberWrong++
-        numberWrong++;
-    }

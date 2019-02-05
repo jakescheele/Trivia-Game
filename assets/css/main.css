@@ -3,3 +3,13 @@ body {
     background-repeat: no-repeat;
     background-size: 100%;
 }
+
+
+@font-face {
+    font-family: Waltograph;
+    src: url(../fonts/waltograph.regular.ttf);
+}
+
+#title, button {
+    font-family: Waltograph;
+}
